@@ -16,13 +16,7 @@ def predict(model: FaceConcernDetector,
            generate_heatmaps: bool = True,
            save_overlay: bool = False,
            output_dir: str = 'outputs') -> Tuple[Dict[str, float], Dict[str, np.ndarray], np.ndarray]:
-    """Run face detection + model prediction on an image path.
-
-    Returns:
-        scores: dict mapping concern name -> confidence percent (0-100)
-        heatmaps: dict mapping concern name -> 2D float numpy heatmap (0-1)
-        original_face: cropped face image (H,W,3) in RGB uint8
-    """
+  
     preprocessor = FacePreprocessor()
 
     print(f"Processing image: {image_path}")
@@ -32,7 +26,7 @@ def predict(model: FaceConcernDetector,
     preprocessed = preprocessor.preprocess_for_model(face_image)
     input_tensor = torch.from_numpy(preprocessed).unsqueeze(0).to(device)
 
-    # Get predictions (model.predict returns a dict of percentages)
+ 
     model.eval()
     with torch.no_grad():
         scores = model.predict(input_tensor)
@@ -71,10 +65,7 @@ def predict(model: FaceConcernDetector,
 def predict_from_bytes(model: FaceConcernDetector,
                       image_bytes: bytes,
                       device: str = 'cpu') -> Tuple[Dict[str, float], Optional[str]]:
-    """Accept image bytes, run inference, and return scores + path to saved overlay (if created).
-
-    Note: This writes a temporary file named 'temp_input.jpg' and a resulting 'temp_overlay.jpg'.
-    """
+    
     import io
     from PIL import Image
 
